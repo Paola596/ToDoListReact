@@ -1,12 +1,50 @@
-
-/* 
-
-    You can write your own styles here...
-    
-    
-    ...Or you can use the import command to include 
-    other sylesheets into your bunde as well, e.j:
-    
-    import 'relative/path/to/stylesheet.scss';
-
-*/
+*{
+    background-color: rgb(250, 245, 231);
+}
+.container {
+    margin: 0 auto;
+    width: 500px;
+    justify-content: center;
+    align-items: center;
+    text-align: start;
+    box-shadow: 7px 7px 28px 1px rgba(5,5,5,0.7);
+    -webkit-box-shadow: 7px 7px 28px 1px rgba(5,5,5,0.7);
+    -moz-box-shadow: 7px 7px 28px 1px rgba(5,5,5,0.7);
+    color:rgb(68, 67, 67);
+    background-color: white;
+}
+p{
+    color: rgb(218, 136, 136);
+    font-size: 80px;
+    margin: 0 auto;
+    text-align: center;
+    font-weight: lighter;
+    margin-top: 50px;
+}
+input{
+    border-style:none;
+    margin:0 auto;
+    width: 100%;
+    background-color: white;
+    margin-top: 8px;
+}
+li{
+    background-color: white;
+    list-style: none;
+    padding: 8px;
+}
+ul{
+    background-color: white;
+    padding: 0;
+}
+.sumTask{
+    font-size: 14px;
+    background-color: white;
+}
+span{
+    background-color: white;
+    float: right;
+    color:rgb(173, 168, 168);
+    font-size: 14px;
+    cursor: pointer;
+}
