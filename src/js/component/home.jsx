@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 
-const URLBASE = "http://assets.breatheco.de/apis/fake/todos/user"
+const URLBASE = "https://assets.breatheco.de/apis/fake/todos/user"
 const USERBASE = "paolita"
 
 const Home = () => {
-	const [ inputValue, setInputValue] = useState("");
+	const [ inputValue, setInputValue] = useState({label:"", done:false});
 	const [ todos, setTodos] = useState([]);
 
 	const getTask = async() => {
@@ -25,7 +25,7 @@ const Home = () => {
 	
 	const createUser = async () => {
         try {
-            let response = await fetch(`${URLBASE}`, {
+            let response = await fetch(`${URLBASE}/${USERBASE}`, {
                 method: "POST",
                 headers: { "Content-type": "application/json" },
                 body: JSON.stringify([])
@@ -46,10 +46,10 @@ const Home = () => {
 
         if (event.key == "Enter") {
             try {
-                let response = await fetch(`${URLBASE}`, {
+                let response = await fetch(`${URLBASE}/${USERBASE}`, {
                     method: "PUT",
                     headers: { "Content-type": "application/json" },
-                    body: JSON.stringify([...tasks, inputValue])
+                    body: JSON.stringify([...todos, inputValue])
                 })
                 if (response.ok) {
                     getTask()
@@ -61,8 +61,25 @@ const Home = () => {
                 console.log(error)
             }
         }
-
-    }
+}
+const deleteTask = async(item) => {
+	console.log(item)
+	try {
+		let response = await fetch(`${URLBASE}/${USERBASE}`, {
+			method: "PUT",
+			headers: { "Content-type": "application/json" },
+			body: JSON.stringify(todos.filter((_, index) => index != item))
+		})
+		if (response.ok) {
+			getTask()
+			setValueEntry({ label: "", done: false })
+		} else {
+			console.log(response)
+		}
+	} catch (error) {
+		console.log(error)
+	}
+}
 
 	useEffect(() => {
 		getTask()
@@ -76,20 +93,18 @@ const Home = () => {
 					<li>
 						<input 
 							type="text" 
-							onChange={(e) => setInputValue(e.target.value)} 
-							value = {inputValue} 
+							onChange={(e) => setInputValue({...inputValue, [e.target.name]: e.target.value})} 
+							value = {inputValue.label} 
+							name = "label"
 							onKeyPress= {(e) => {
-								if (e.key === "Enter"){
-									setTodos(todos.concat(inputValue));
-									setInputValue("");
-								}
+								addNewTask(e);
 							}}
 							placeholder="What needs to be done?"/>
 					</li>
 					
 					{todos.map((item, index) =>(
-						<li key={index}>{item.label} {" "}
-						<span onClick={() => setTodos (todos.filter((item,current) => index != current ))}>x</span>
+						<li key={index}> {item.label} {" "}
+						<span onClick={() => deleteTask(index)}>x</span>
 						</li>
 					))}
 
