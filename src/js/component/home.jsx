@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 
-const URLBASE = "http://assets.breatheco.de/apis/fake/todos/user/paolita"
-
+const URLBASE = "http://assets.breatheco.de/apis/fake/todos/user"
+const USERBASE = "paolita"
 
 const Home = () => {
 	const [ inputValue, setInputValue] = useState("");
@@ -9,7 +9,7 @@ const Home = () => {
 
 	const getTask = async() => {
 		try {
-			let response = await fetch (`${URLBASE}`)
+			let response = await fetch (`${URLBASE}/${USERBASE}`)
 			let data = await response.json()
 
             if (response.status == 404) {
@@ -27,30 +27,46 @@ const Home = () => {
         try {
             let response = await fetch(`${URLBASE}`, {
                 method: "POST",
-                headers: {
-                    "Content-type": "application/json"
-                },
+                headers: { "Content-type": "application/json" },
                 body: JSON.stringify([])
             })
-
             if (response.ok) {
                 getTask()
+            } else {
+                console.log(response)
             }
-            console.log(response)
 
-        } catch (err) {
-            console.log(err)
+        } catch (error) {
+            console.log(error)
         }
     }
 
+    const addNewTask = async (event) => {
+        console.log(event.key)
+
+        if (event.key == "Enter") {
+            try {
+                let response = await fetch(`${URLBASE}`, {
+                    method: "PUT",
+                    headers: { "Content-type": "application/json" },
+                    body: JSON.stringify([...tasks, inputValue])
+                })
+                if (response.ok) {
+                    getTask()
+                    setInputValue({ label: "", done: false })
+                } else {
+                    console.log(response)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+    }
 
 	useEffect(() => {
 		getTask()
 	}, [])
-
-
-
-
 
 	return (
 		<>
