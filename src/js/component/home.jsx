@@ -1,11 +1,57 @@
-import React, {useState} from "react";
-import ReactDOM from "react-dom";
+import React, {useEffect, useState} from "react";
+
+const URLBASE = "http://assets.breatheco.de/apis/fake/todos/user/paolita"
 
 
-//create your first component
 const Home = () => {
 	const [ inputValue, setInputValue] = useState("");
 	const [ todos, setTodos] = useState([]);
+
+	const getTask = async() => {
+		try {
+			let response = await fetch (`${URLBASE}`)
+			let data = await response.json()
+
+            if (response.status == 404) {
+                console.log("Debes crear el usuario")
+                createUser()
+            } else {
+                setTodos(data)
+            }
+		} catch(error){
+			console.log(error)
+		}
+	}
+	
+	const createUser = async () => {
+        try {
+            let response = await fetch(`${URLBASE}`, {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                body: JSON.stringify([])
+            })
+
+            if (response.ok) {
+                getTask()
+            }
+            console.log(response)
+
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+
+	useEffect(() => {
+		getTask()
+	}, [])
+
+
+
+
+
 	return (
 		<>
 			<p>to dos</p>
@@ -26,7 +72,7 @@ const Home = () => {
 					</li>
 					
 					{todos.map((item, index) =>(
-						<li>{item} {" "}
+						<li key={index}>{item.label} {" "}
 						<span onClick={() => setTodos (todos.filter((item,current) => index != current ))}>x</span>
 						</li>
 					))}
